@@ -14,7 +14,7 @@ module QuackConcurrency
     # Removes all objects from the queue.
     # @return [self]
     def clear
-      @items = []
+      @items.clear
       self
     end
     
