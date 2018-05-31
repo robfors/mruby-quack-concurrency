@@ -1,6 +1,6 @@
 module QuackConcurrency
   
-  # @note duck type for +::Thread::Queue+
+  # @note duck type for `::Thread::Queue`
   class Queue
   
     # Creates a new {Queue} concurrency tool.
@@ -59,8 +59,8 @@ module QuackConcurrency
     
     # Retrieves item from the queue.
     # @note If the queue is empty, it will block until an item is available.
-    #   If +non_block+ is true, it will raise {Error} instead.
-    # @raise {Error} if queue is empty and +non_block+ is true
+    #   If `non_block` is true, it will raise {Error} instead.
+    # @raise {Error} if queue is empty and `non_block` is true
     # @param non_block [Boolean] 
     def pop(non_block = false)
       if num_waiting >= length
