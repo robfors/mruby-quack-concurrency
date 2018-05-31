@@ -13,6 +13,11 @@ module QuackConcurrency
       @run_called = false
     end
     
+    # @api private
+    def current?
+      Thread.current == @thread
+    end
+    
     def run_thread
       raise '#run_thread has already been called once' if @run_called
       @run_called = true
@@ -24,12 +29,12 @@ module QuackConcurrency
     
     def sleep_thread(duration)
       start_time = Time.now
-      stop_thread(timeout: duration)
+      stop_thread(duration)
       time_elapsed = Time.now - start_time
     end
     
     def stop_thread(timeout = nil)
-      raise 'can only stop current Thread' unless Thread.current == @thread
+      raise 'can only stop current Thread' unless current?
       raise "'timeout' argument must be nil or a Numeric" if timeout != nil && !timeout.is_a?(Numeric)
       raise '#stop_thread has already been called once' if @stop_called
       @stop_called = true
