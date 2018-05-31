@@ -20,7 +20,7 @@ module QuackConcurrency
     
     # Closes the queue. A closed queue cannot be re-opened.
     # After the call to close completes, the following are true:
-    # * {#closed?} will return +true+.
+    # * {#closed?} will return `true`.
     # * {#close} will be ignored.
     # * {#push} will raise an exception.
     # * until empty, calling {#pop} will return an object from the queue as usual.
