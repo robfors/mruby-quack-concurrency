@@ -8,14 +8,18 @@ module QuackConcurrency
       @resume_all_forever = false
     end
     
-    # Resumes all current and future waiting thread.
+    def any_waiting?
+      @condition_variable.any_waiting_threads?
+    end
+    
+    # Resumes all current and future waiting Thread.
     # @return [void]
     def resume_all
       @condition_variable.broadcast
       nil
     end
     
-    # Resumes all current and future waiting thread.
+    # Resumes all current and future waiting Thread.
     # @return [void]
     def resume_all_forever
       @resume_all_forever = true
@@ -23,14 +27,14 @@ module QuackConcurrency
       nil
     end
     
-    # Resumes next waiting thread if one exists.
+    # Resumes next waiting Thread if one exists.
     # @return [void]
     def resume_one
       @condition_variable.signal
       nil
     end
     
-    # Waits for another thread to resume the calling thread.
+    # Waits for another Thread to resume the calling Thread.
     # @note Will block until resumed.
     # @return [void]
     def wait
@@ -41,10 +45,6 @@ module QuackConcurrency
     
     def waiting_count
       @condition_variable.waiting_threads_count
-    end
-    
-    def any_waiting?
-      @condition_variable.any_waiting_threads?
     end
     
   end
