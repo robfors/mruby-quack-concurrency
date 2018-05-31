@@ -38,9 +38,11 @@ module QuackConcurrency
     
     def wait(mutex = nil, timeout = nil)
       if mutex != nil && (!mutex.respond_to?(:lock) || !mutex.respond_to?(:unlock))
-        raise "'mutex' must respond to 'lock' and 'unlock'"
+        raise ArgumentError, "'mutex' must respond to 'lock' and 'unlock'"
       end
-      raise "'timeout' argument must be nil or a Numeric" if timeout != nil && !timeout.is_a?(Numeric)
+      if timeout != nil && !timeout.is_a?(Numeric)
+        raise ArgumentError, "'timeout' argument must be nil or a Numeric"
+      end
       sleeper = UninterruptibleSleeper.for_current
       @waiting_threads_sleepers.push(sleeper)
       if mutex
