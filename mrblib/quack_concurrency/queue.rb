@@ -11,19 +11,19 @@ module QuackConcurrency
       @closed = false
     end
     
-    # Removes all objects from the queue.
+    # Removes all objects from the {Queue}.
     # @return [self]
     def clear
       @items.clear
       self
     end
     
-    # Closes the queue. A closed queue cannot be re-opened.
+    # Closes the {Queue}. A closed {Queue} cannot be re-opened.
     # After the call to close completes, the following are true:
     # * {#closed?} will return `true`.
     # * {#close} will be ignored.
     # * {#push} will raise an exception.
-    # * until empty, calling {#pop} will return an object from the queue as usual.
+    # * until empty, calling {#pop} will return an object from the {Queue} as usual.
     # @return [self]
     def close
       return if closed?
@@ -32,35 +32,35 @@ module QuackConcurrency
       self
     end
     
-    # Checks if queue is closed.
+    # Checks if {Queue} is closed.
     # @return [Boolean]
     def closed?
       @closed
     end
     
-    # Checks if queue is empty.
+    # Checks if {Queue} is empty.
     # @return [Boolean]
     def empty?
       @items.empty?
     end
     
-    # Returns the length of the queue.
+    # Returns the length of the {Queue}.
     # @return [Integer]
     def length
       @items.length
     end
     alias_method :size, :length
     
-    # Returns the number of threads waiting on the queue.
+    # Returns the number of threads waiting on the {Queue}.
     # @return [Integer]
     def num_waiting
       @waiter.waiting_threads_count
     end
     
-    # Retrieves item from the queue.
-    # @note If the queue is empty, it will block until an item is available.
-    #   If `non_block` is true, it will raise {Error} instead.
-    # @raise {Error} if queue is empty and `non_block` is true
+    # Retrieves item from the {Queue}.
+    # @note If the {Queue} is empty, it will block until an item is available.
+    #   If `non_block` is `true`, it will raise {ThreadError} instead.
+    # @raise {ThreadError} if {Queue} is empty and `non_block` is `true`
     # @param non_block [Boolean] 
     def pop(non_block = false)
       if num_waiting >= length
@@ -76,7 +76,8 @@ module QuackConcurrency
     alias_method :deq, :pop
     alias_method :shift, :pop
     
-    # Pushes the given object to the queue.
+    # Pushes the given object to the {Queue}.
+    # @param item [Object]
     # @return [self]
     def push(item = nil)
       raise ClosedQueueError if closed?
