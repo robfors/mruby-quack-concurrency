@@ -31,6 +31,7 @@ module QuackConcurrency
     # Gets the value of the {Future}.
     # @note This method will block until the future has completed.
     # @raise [Canceled] if the {Future} is canceled
+    # @raise [Exception] if the {Future} was canceled with a given exception
     # @return [Object] value of the {Future}
     def get
       @waiter.wait
