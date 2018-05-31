@@ -7,10 +7,21 @@ module QuackConcurrency
     # Creates a new {ReentrantMutex} concurrency tool.
     # @return [ReentrantMutex]
     def initialize
+      super
       @lock_depth = 0
     end
     
-    # Locks this {ReentrantMutex}. Will block until available.
+    # @api private
+    def base_depth(&block)
+      start_depth = @lock_depth
+      @lock_depth = 1
+      yield
+    ensure
+      @lock_depth = start_depth
+    end
+    
+    # Locks this {ReentrantMutex}.
+    # Will block until available.
     # @return [void]
     def lock(&block)
       if block_given?  
@@ -32,16 +43,16 @@ module QuackConcurrency
       nil
     end
     
-    # Checks if this {ReentrantMutex} is locked by a thread other than the caller.
+    # Checks if this {ReentrantMutex} is locked by a Thread other than the caller.
     # @return [Boolean]
     def locked_out?
       locked? && !owned?
     end
     
     # Releases the lock and sleeps.
-    # When the calling thread is next woken up, it will attempt to reacquire the lock.
-    # @param timeout [Integer] seconds to sleep, +nil+ will sleep forever
-    # @raise [Error] if this {ReentrantMutex} wasn't locked by the calling thread.
+    # When the calling Thread is next woken up, it will attempt to reacquire the lock.
+    # @param timeout [Integer] seconds to sleep, `nil` will sleep forever
+    # @raise [Error] if this {ReentrantMutex} wasn't locked by the calling Thread
     # @return [void]
     def sleep(timeout = nil)
       raise Error, 'can not unlock reentrant mutex, it is not locked' if locked?
@@ -69,7 +80,7 @@ module QuackConcurrency
     end
     
     # Releases the lock.
-    # @raise [Error] if {ReentrantMutex} wasn't locked by the calling thread
+    # @raise [Error] if {ReentrantMutex} wasn't locked by the calling Thread
     # @return [void]
     def unlock(&block)
       raise Error, 'can not unlock reentrant mutex, it is not locked' if locked?
@@ -89,7 +100,7 @@ module QuackConcurrency
     end
     
     # Releases the lock.
-    # @raise [Error] if {ReentrantMutex} wasn't locked by the calling thread
+    # @raise [Error] if {ReentrantMutex} wasn't locked by the calling Thread
     # @return [void]
     def unlock!(&block)
       raise Error, 'can not unlock reentrant mutex, it is not locked' if locked?
@@ -108,16 +119,6 @@ module QuackConcurrency
         super
       end
       nil
-    end
-    
-    private
-    
-    def base_depth(&block)
-      start_depth = @lock_depth
-      @lock_depth = 1
-      yield
-    ensure
-      @lock_depth = start_depth
     end
     
   end
