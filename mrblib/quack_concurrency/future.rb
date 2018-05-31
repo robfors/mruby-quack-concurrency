@@ -18,7 +18,7 @@ module QuackConcurrency
     # @return [void]
     def cancel(exception = nil)
       exception ||= Canceled.new
-      raise(exception)
+      self.raise(exception)
       nil
     end
     
@@ -34,7 +34,7 @@ module QuackConcurrency
     # @return [Object] value of the {Future}
     def get
       @waiter.wait
-      raise @exception if @exception
+      Kernel.raise(@exception) if @exception
       @value
     end
     
@@ -44,9 +44,9 @@ module QuackConcurrency
     # @return [void]
     def raise(exception = nil)
       unless exception == nil || exception.is_a?(Exception)
-        raise ArgumentError, "'exception' must be nil or an instance of an Exception"
+        Kernel.raise(ArgumentError, "'exception' must be nil or an instance of an Exception")
       end
-      raise Complete if @complete
+      Kernel.raise(Complete) if @complete
       @complete = true
       @exception = exception || StandardError.new
       @waiter.resume_all_forever
@@ -58,7 +58,7 @@ module QuackConcurrency
     # @param new_value [nil,Object] value to assign to future
     # @return [void]
     def set(new_value = nil)
-      raise Complete if @complete
+      Kernel.raise(Complete) if @complete
       @complete = true
       @value = new_value
       @waiter.resume_all_forever
