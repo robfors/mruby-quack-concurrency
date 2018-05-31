@@ -22,6 +22,7 @@ module QuackConcurrency
     end
     
     # Gets the currently executing `Thread`.
+    # @api private
     # @return [Thread]
     def caller
       Thread.current
