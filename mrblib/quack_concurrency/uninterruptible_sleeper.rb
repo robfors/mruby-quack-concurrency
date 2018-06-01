@@ -48,7 +48,7 @@ module QuackConcurrency
         else
           Thread.stop
         end
-        redo unless @state == :running || Time.now >= target_time
+        break if @state == :running || Time.now >= target_time
       end
       @state = :running
       nil
